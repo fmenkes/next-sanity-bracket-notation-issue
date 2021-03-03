@@ -15,6 +15,22 @@ export default {
       title: 'Title',
     },
     {
+      name: 'test',
+      type: 'object',
+      fields: [
+        {
+          name: 'en',
+          type: 'string',
+          title: 'English'
+        },
+        {
+          name: 'sv',
+          type: 'string',
+          title: 'Swedish'
+        }
+      ]
+    },
+    {
       name: 'content',
       type: 'array',
       title: 'Page sections',

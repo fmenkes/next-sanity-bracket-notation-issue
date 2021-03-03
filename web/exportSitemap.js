@@ -1,9 +1,9 @@
 const {exportPathMap} = require('./next.config')
 const sm = require('sitemap')
 const fs = require('fs')
-const client = require('./client')
+const {getClient} = require('./client')
 
-client.fetch(`*[_id == "global-config"] {url}[0]`).then(config => {
+getClient(false).fetch(`*[_id == "global-config"] {url}[0]`).then(config => {
   exportPathMap().then(res => {
     const sitemap = sm.createSitemap({
       hostname: config.url,

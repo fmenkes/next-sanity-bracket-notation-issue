@@ -1,6 +1,6 @@
 import React from 'react'
 import BaseApp from 'next/app'
-import client from '../client'
+import {getClient} from '../client'
 // import 'normalize.css'
 import '../styles/shared.module.css'
 import '../styles/layout.css'
@@ -29,7 +29,7 @@ class App extends BaseApp {
     }
 
     // Add site config from sanity
-    return client.fetch(siteConfigQuery).then(config => {
+    return getClient(false).fetch(siteConfigQuery).then(config => {
       if (!config) {
         return {pageProps}
       }

@@ -1,5 +1,5 @@
 const withCSS = require('@zeit/next-css')
-const client = require('./client')
+const {getClient} = require('./client')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const query = `
@@ -41,7 +41,7 @@ module.exports = withCSS({
     localIdentName: isProduction ? '[hash:base64:5]' : '[name]__[local]___[hash:base64:5]'
   },
   exportPathMap: function () {
-    return client.fetch(query).then(res => {
+    return getClient(false).fetch(query).then(res => {
       const {routes = []} = res
       const nextRoutes = {
         // Routes imported from sanity
