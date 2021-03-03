@@ -34,47 +34,33 @@ const pageQuery = groq`
 const LandingPage = (props) => {
   const {data} = usePreviewSubscription(pageQuery, {
     initialData: props,
-    enabled: true,
+    enabled: props.slug === 'test',
     params: {locale: 'en', slug: props.slug}
   })
 
-  const {
-    page: {
-      title = 'Missing title',
-      description,
-      disallowRobots,
-      openGraphImage,
-      content = [],
-      test,
-      testDot,
-      locale
-    },
-    slug
-  } = data
+  console.log('Data:', data);
 
-  console.log(data)
-
-  const openGraphImages = openGraphImage
+  const openGraphImages = props.openGraphImage
     ? [
       {
-        url: builder.image(openGraphImage).width(800).height(600).url(),
+        url: builder.image(props.openGraphImage).width(800).height(600).url(),
         width: 800,
         height: 600,
-        alt: title
+        alt: props.title
       },
       {
         // Facebook recommended size
-        url: builder.image(openGraphImage).width(1200).height(630).url(),
+        url: builder.image(props.openGraphImage).width(1200).height(630).url(),
         width: 1200,
         height: 630,
-        alt: title
+        alt: props.title
       },
       {
         // Square 1:1
-        url: builder.image(openGraphImage).width(600).height(600).url(),
+        url: builder.image(props.openGraphImage).width(600).height(600).url(),
         width: 600,
         height: 600,
-        alt: title
+        alt: props.title
       }
     ]
     : []
@@ -83,20 +69,24 @@ const LandingPage = (props) => {
     <Layout config={props.config}>
       <NextSeo
         config={{
-          title,
+          title: props.title,
           titleTemplate: `${props.config.title} | %s`,
-          description,
-          canonical: props.config.url && `${props.config.url}/${slug}`,
+          description: props.description,
+          canonical: props.config.url && `${props.config.url}/${props.slug}`,
           openGraph: {
-            images: openGraphImages
+            images: props.openGraphImages
           },
-          noindex: disallowRobots
+          noindex: props.disallowRobots
         }}
       />
-      {content && <RenderSections sections={content} />}
-      <div style={{marginLeft: '400px'}}>Preview mode with bracket notation: {typeof test === 'string' && test}</div>
-      <div style={{marginLeft: '400px'}}>Preview mode with dot notation: {typeof testDot === 'string' && testDot}</div>
-      <div style={{marginLeft: '400px'}}>Locale: {locale}</div>
+      {data.page ? <RenderSections sections={data.page.content} /> : <RenderSections sections={props.content} /> }
+      {props.slug === 'test' &&
+      <>
+        <div style={{marginLeft: '400px'}}>Preview mode with bracket notation: {data.page.test}</div>
+        <div style={{marginLeft: '400px'}}>Preview mode with dot notation: {data.page.testDot}</div>
+        <div style={{marginLeft: '400px'}}>Locale: {data.page.locale}</div>
+      </>
+      }
     </Layout>
   )
 }
